@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Tic-Tac-Toe Game</title>
+  <link rel="stylesheet" href="style.css">
+  <script defer src="app.js"></script>
+  <style>
+    /* Embedded styles for simplicity */
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #f4f4f9;
+      margin: 0;
+      padding: 0;
+      color: #333;
+    }
+    h1, h2, h3 {
+      color: #2c3e50;
+    }
+    h1 {
+      text-align: center;
+      margin-top: 30px;
+      color: #8e44ad; /* Purple color for title */
+    }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    .section {
+      margin-bottom: 40px;
+      background-color: #ffffff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    .section h2 {
+      color: #16a085; /* Green color for section headings */
+    }
+    pre {
+      background-color: #2c3e50;
+      color: #ecf0f1;
+      padding: 10px;
+      border-radius: 5px;
+      overflow-x: auto;
+    }
+    .highlight {
+      color: #3498db; /* Blue color for code */
+    }
+    ul {
+      list-style-type: disc;
+      margin-left: 20px;
+    }
+    a {
+      color: #e74c3c; /* Red color for links */
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    .game-board {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 20px;
+      text-align: center;
+    }
+    .cell {
+      width: 60px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #ecf0f1;
+      font-size: 24px;
+      font-weight: bold;
+      border: 1px solid #bdc3c7;
+      cursor: pointer;
+    }
+    .cell.taken {
+      background-color: #95a5a6;
+      cursor: not-allowed;
+    }
+    .status {
+      font-size: 20px;
+      text-align: center;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>🎮 Tic-Tac-Toe Game</h1>
+    <p>A simple two-player Tic-Tac-Toe game built with JavaScript. 🐐🍇</p>
+
+    <div class="section">
+      <h2>How to Play 🕹️</h2>
+      <p>Click on any empty cell to place your marker. Player 1 uses 🐐 and Player 2 uses 🍇.</p>
+      <p>The game will announce the winner 🎉 or declare a draw 🤝 when the game ends.</p>
+    </div>
+
+    <div class="game-board" id="game-board">
+      <div class="cell" id="cell-0"></div>
+      <div class="cell" id="cell-1"></div>
+      <div class="cell" id="cell-2"></div>
+      <div class="cell" id="cell-3"></div>
+      <div class="cell" id="cell-4"></div>
+      <div class="cell" id="cell-5"></div>
+      <div class="cell" id="cell-6"></div>
+      <div class="cell" id="cell-7"></div>
+      <div class="cell" id="cell-8"></div>
+    </div>
+
+    <div class="status" id="status">Player 🐐's Turn</div>
+  </div>
+
+  <script>
+    let board = [" ", " ", " ", " ", " ", " ", " ", " ", " "];
+    let currentPlayer = "🐐";
+    let active = true;
+    const status = document.getElementById('status');
+    const cells = Array.from(document.getElementsByClassName('cell'));
+
+    function printBoard() {
+      board.forEach((cell, index) => {
+        cells[index].textContent = cell;
+        if (cell !== " ") {
+          cells[index].classList.add('taken');
+        } else {
+          cells[index].classList.remove('taken');
+        }
+      });
+    }
+
+    function handleMove(position) {
+      if (board[position] === " " && active) {
+        board[position] = currentPlayer;
+        printBoard();
+
+        if (checkWin()) {
+          status.textContent = `Player ${currentPlayer} wins! 🎉`;
+          active = false;
+          return;
+        }
+
+        if (board.every(cell => cell !== " ")) {
+          status.textContent = "It's a draw! 🤝";
+          active = false;
+          return;
+        }
+
+        currentPlayer = currentPlayer === "🐐" ? "🍇" : "🐐";
+        status.textContent = `Player ${currentPlayer}'s Turn`;
+      }
+    }
+
+    function checkWin() {
+      const conditions = [
+        [0, 1, 2],
+        [3, 4, 5],
+        [6, 7, 8],
+        [0, 3, 6],
+        [1, 4, 7],
+        [2, 5, 8],
+        [0, 4, 8],
+        [2, 4, 6]
+      ];
+
+      return conditions.some(condition => {
+        const [a, b, c] = condition;
+        return board[a] === currentPlayer && board[b] === currentPlayer && board[c] === currentPlayer;
+      });
+    }
+
+    cells.forEach((cell, index) => {
+      cell.addEventListener('click', () => handleMove(index));
+    });
+
+  </script>
+
+</body>
+</html>
